@@ -3,10 +3,17 @@ const int dataPin = 11;   // DS
 const int latchPin = 12;  // ST_CP
 const int clockPin = 10;  // SH_CP
 
-// Servo Moteur
-#include <Servo.h>
-Servo monServo;
-int servoPin = 9;  // Utilisation de la broche 9 pour le servo
+// Stepper Moteur
+#include <Stepper.h>
+
+const int stepPin = 2;// Déclaration des broches de contrôle du moteur
+const int dirPin = 3;
+
+// Déclaration de la résolution du moteur
+const int stepsPerRevolution = 200;
+
+// Création de l'objet Stepper
+Stepper myStepper(stepsPerRevolution, stepPin, dirPin);
 
 const int digitPins[4] = {4, 3, 2, 5};  // Pins des cathodes des digits
 
@@ -110,7 +117,11 @@ void setup() {
     digitalWrite(digitPins[i], HIGH);
   }
 
-  monServo.attach(servoPin);
+  // Déclaration de la vitesse du moteur
+  myStepper.setSpeed(100); // Vitesse en tours par minute (TPM)
+
+  // Déclaration de la direction du moteur
+  pinMode(dirPin, OUTPUT);
 
   // Configuration des boutons avec résistance de tirage interne activée
   pinMode(button0, INPUT_PULLUP);
@@ -120,8 +131,6 @@ void setup() {
   pinMode(button1, INPUT_PULLUP);
 
   Serial.begin(9600);
-  
-  monServo.write(0);
 }
 
 int angle = 0;
