@@ -99,6 +99,7 @@ void moveStepper(int _angle, int newAngle) {
   	digitalWrite(dirPin, 1);												//Changement direction du moteur
 		myStepper.step(((newAngle-_angle)/360)*200);
 	}
+	_angle = newAngle
 }
 
 void setup() {
