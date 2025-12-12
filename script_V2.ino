@@ -145,7 +145,7 @@ void loop() {
     delay(200);
     angle = 180;
   }
-  if (digitalRead(button_1) == LOW) {
+  if (digitalRead(button_1) == LOW) {				//On fait descendre de 1 Step le plateau
     if (angle - 1>=0){
       angle = angle - 1;
       digitalWrite(dirPin, -1);
@@ -153,7 +153,7 @@ void loop() {
       delay(200);
     }
   }
-  if (digitalRead(button1) == LOW) {
+  if (digitalRead(button1) == LOW) {				//On fait monter de 1 Step le plateau
     if (angle + 1<=3){
       angle = angle + 1;
       digitalWrite(dirPin, 1);
