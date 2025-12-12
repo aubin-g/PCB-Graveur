@@ -18,9 +18,9 @@ Stepper myStepper(stepsPerRevolution, stepPin, dirPin);
 const int digitPins[4] = {4, 3, 2, 5};  // Pins des cathodes des digits
 
 // Définition des boutons
-const int button0 = 6;   // Bouton pour 0 degrés\0 mm 
-const int button20 = 7;  // Bouton pour 36 degrés\0.6 mm
-const int button100 = 8; // Bouton pour 180 degrés\3 mm
+const int button0 = 6;   // Bouton pour 0 step\0 mm 
+const int button20 = 7;  // Bouton pour 20 steps\0.6 mm
+const int button100 = 8; // Bouton pour 100 steps\3 mm
 const int button_1 = A0; // Bouton pour -1 Step
 const int button1 = A1; // Bouton pour +1 Step
 
