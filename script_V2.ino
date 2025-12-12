@@ -91,15 +91,14 @@ void displayNumber(float number) {
 }
 
 void moveStepper(int _angle, int newAngle) {
-	if (_angle>newAngle){
-  	// Définition de la direction du moteur
-  	digitalWrite(dirPin, -1);
+	if (_angle>newAngle){															//fait descendre le plateau
+  	digitalWrite(dirPin, -1);											//Changement direction du moteur
 		myStepper.step(((_angle-newAngle)/360)*200);
-}
-    float elevation = (_angle / 360.0) * 6.0;
-    displayNumber(elevation);
-  
-  
+	}
+	if (_angle<newAngle){															//fait monter le plateau
+  	digitalWrite(dirPin, 1);												//Changement direction du moteur
+		myStepper.step(((newAngle-_angle)/360)*200);
+	}
 }
 
 void setup() {
@@ -132,31 +131,33 @@ int angle = 0;
 void loop() {
 
   if (digitalRead(button0) == LOW) {
-    moveServo(angle, 0);
+    moveStepper(angle, 0);
     delay(200);
     angle = 0;
   }
   if (digitalRead(button36) == LOW) {
-    moveServo(angle, 36);
+    moveStepper(angle, 36);
     delay(200); 
     angle = 36;
   }
   if (digitalRead(button180) == LOW) {
-    moveServo(angle, 180);
+    moveStepper(angle, 180);
     delay(200);
     angle = 180;
   }
   if (digitalRead(button_1) == LOW) {
     if (angle - 1>=0){
       angle = angle - 1;
-      monServo.write(angle);
+      digitalWrite(dirPin, -1);
+			myStepper.step(1);
       delay(200);
     }
   }
   if (digitalRead(button1) == LOW) {
     if (angle + 1<=3){
       angle = angle + 1;
-      monServo.write(angle);
+      digitalWrite(dirPin, 1);
+			myStepper.step(1);
       delay(200);
     }
   }
