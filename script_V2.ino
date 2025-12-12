@@ -21,8 +21,8 @@ const int digitPins[4] = {4, 3, 2, 5};  // Pins des cathodes des digits
 const int button0 = 6;   // Bouton pour 0 degrés\0 mm 
 const int button36 = 7;  // Bouton pour 36 degrés\0.6 mm
 const int button180 = 8; // Bouton pour 180 degrés\3 mm
-const int button_1 = A0; // Bouton pour -1 degrés
-const int button1 = A1; // Bouton pour +1 degrés
+const int button_1 = A0; // Bouton pour -1 Step
+const int button1 = A1; // Bouton pour +1 Step
 
 const byte segmentDigits[12] =  {
   0b01011111, // 0
