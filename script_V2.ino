@@ -62,7 +62,7 @@ void displayDigit(int digit, int value, bool decimalPoint = false) {
   delay(5);
 }
 
-//Afficher une float à un entier et deux décimales
+// Afficher une float à un entier et deux décimales
 void displayNumber(float number) {
   int integer = (int)number; 
   int firstDecimal = (int)((number - integer) * 10);
@@ -91,12 +91,12 @@ void displayNumber(float number) {
 }
 
 void moveStepper(int _step, int newStep) {
-	if (_step>newStep){															//fait descendre le plateau
-  	digitalWrite(dirPin, -1);											//Changement direction du moteur
+	if (_step>newStep){// Fait descendre le plateau
+  	digitalWrite(dirPin, -1);// Changement direction du moteur
 		myStepper.step(_step-newStep);
 	}
-	if (_angle<newAngle){															//fait monter le plateau
-  	digitalWrite(dirPin, 1);												//Changement direction du moteur
+	if (_angle<newAngle){// Fait monter le plateau
+  	digitalWrite(dirPin, 1);// Changement direction du moteur
 		myStepper.step(newStep-_step);
 	}
 	_step = newStep
@@ -112,7 +112,7 @@ void setup() {
   }
 
   // Déclaration de la vitesse du moteur
-  myStepper.setSpeed(100); // Vitesse en tours par minute (TPM)
+  myStepper.setSpeed(100); // Vitesse en tours par minute
 
   // Déclaration de la direction du moteur
   pinMode(dirPin, OUTPUT);
@@ -146,7 +146,7 @@ void loop() {
     delay(200);
     step = 100;
   }
-  if (digitalRead(button_1) == LOW) {				//On fait descendre de 1 Step le plateau
+  if (digitalRead(button_1) == LOW) {// On fait descendre de 1 Step le plateau
     if (step - 1>=0){
       step = step - 1;
       digitalWrite(dirPin, -1);
@@ -154,7 +154,7 @@ void loop() {
       delay(200);
     }
   }
-  if (digitalRead(button1) == LOW) {				//On fait monter de 1 Step le plateau
+  if (digitalRead(button1) == LOW) {// On fait monter de 1 Step le plateau
     if (angle + 1<=3){
       step = step + 1;
       digitalWrite(dirPin, 1);
