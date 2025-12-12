@@ -90,20 +90,14 @@ void displayNumber(float number) {
   }
 }
 
-void moveServo(int _angle, int newAngle) {
-  for (int position = _angle; position <= newAngle; position ++){ // on crée une variable position qui prend des valeurs entre 0 à 180 degrés
-    monServo.write(position);  // le bras du servomoteur prend la position de la variable position
+void moveStepper(int _angle, int newAngle) {
+	if (_angle>newAngle){
+  	// Définition de la direction du moteur
+  	digitalWrite(dirPin, -1);
+		myStepper.step(((_angle-newAngle)/360)*200);
+}
     float elevation = (_angle / 360.0) * 6.0;
     displayNumber(elevation);
-    delay(40);
-  }
-
-  for (int position = _angle; position >= newAngle; position --){ // cette fois la variable position passe de 180 à 0°
-    monServo.write(position);  // le bras du servomoteur prend la position de la variable position
-    float elevation = (_angle / 360.0) * 6.0;
-    displayNumber(elevation);
-    delay(40);
-  }
   
   
 }
