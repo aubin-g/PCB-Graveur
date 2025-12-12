@@ -19,8 +19,8 @@ const int digitPins[4] = {4, 3, 2, 5};  // Pins des cathodes des digits
 
 // Définition des boutons
 const int button0 = 6;   // Bouton pour 0 degrés\0 mm 
-const int button36 = 7;  // Bouton pour 36 degrés\0.6 mm
-const int button180 = 8; // Bouton pour 180 degrés\3 mm
+const int button20 = 7;  // Bouton pour 36 degrés\0.6 mm
+const int button100 = 8; // Bouton pour 180 degrés\3 mm
 const int button_1 = A0; // Bouton pour -1 Step
 const int button1 = A1; // Bouton pour +1 Step
 
@@ -90,16 +90,16 @@ void displayNumber(float number) {
   }
 }
 
-void moveStepper(int _angle, int newAngle) {
-	if (_angle>newAngle){															//fait descendre le plateau
+void moveStepper(int _step, int newStep) {
+	if (_step>newStep){															//fait descendre le plateau
   	digitalWrite(dirPin, -1);											//Changement direction du moteur
-		myStepper.step(((_angle-newAngle)/360)*200);
+		myStepper.step(_step-newStep);
 	}
 	if (_angle<newAngle){															//fait monter le plateau
   	digitalWrite(dirPin, 1);												//Changement direction du moteur
-		myStepper.step(((newAngle-_angle)/360)*200);
+		myStepper.step(newStep-_step);
 	}
-	_angle = newAngle
+	_step = newStep
 }
 
 void setup() {
@@ -119,36 +119,36 @@ void setup() {
 
   // Configuration des boutons avec résistance de tirage interne activée
   pinMode(button0, INPUT_PULLUP);
-  pinMode(button36, INPUT_PULLUP);
-  pinMode(button180, INPUT_PULLUP);
+  pinMode(button20, INPUT_PULLUP);
+  pinMode(button100, INPUT_PULLUP);
   pinMode(button_1, INPUT_PULLUP);
   pinMode(button1, INPUT_PULLUP);
 
   Serial.begin(9600);
 }
 
-int angle = 0;
+int step = 0;
 
 void loop() {
 
   if (digitalRead(button0) == LOW) {
-    moveStepper(angle, 0);
+    moveStepper(step, 0);
     delay(200);
-    angle = 0;
+    step = 0;
   }
-  if (digitalRead(button36) == LOW) {
-    moveStepper(angle, 36);
+  if (digitalRead(button20) == LOW) {
+    moveStepper(step, 20);
     delay(200); 
-    angle = 36;
+    step = 20;
   }
-  if (digitalRead(button180) == LOW) {
-    moveStepper(angle, 180);
+  if (digitalRead(button100) == LOW) {
+    moveStepper(step, 100);
     delay(200);
-    angle = 180;
+    step = 100;
   }
   if (digitalRead(button_1) == LOW) {				//On fait descendre de 1 Step le plateau
-    if (angle - 1>=0){
-      angle = angle - 1;
+    if (step - 1>=0){
+      step = step - 1;
       digitalWrite(dirPin, -1);
 			myStepper.step(1);
       delay(200);
@@ -156,7 +156,7 @@ void loop() {
   }
   if (digitalRead(button1) == LOW) {				//On fait monter de 1 Step le plateau
     if (angle + 1<=3){
-      angle = angle + 1;
+      step = step + 1;
       digitalWrite(dirPin, 1);
 			myStepper.step(1);
       delay(200);
@@ -164,6 +164,6 @@ void loop() {
   }
 
   // Calcul et affichage de l'élévation
-  float elevation = (angle / 360.0) * 6.0;
+  float elevation = (step / 200.0) * 6.0;
   displayNumber(elevation);
 }
