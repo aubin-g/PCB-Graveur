@@ -4,25 +4,25 @@ const int latchPin = 12;  // ST_CP
 const int clockPin = 10;  // SH_CP
 
 // Stepper Moteur
-#include <Stepper.h>
+#include <AccelStepper.h>
 
-const int stepPin = 2;// Déclaration des broches de contrôle du moteur
-const int dirPin = 3;
-
-// Déclaration de la résolution du moteur
-const int stepsPerRevolution = 200;
+const int stepPin = 6;// Déclaration des broches de contrôle du moteur
+const int dirPin = 7;
 
 // Création de l'objet Stepper
-Stepper myStepper(stepsPerRevolution, stepPin, dirPin);
+AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
+
+int stepPosition = 0;
+
 
 const int digitPins[4] = {5, 2, 3, 4};  // Pins des cathodes des digits
 
 // Définition des boutons
-const int button0 = 6;   // Bouton pour 0 step\0 mm 
-const int button20 = 7;  // Bouton pour 20 steps\0.6 mm
-const int button100 = 8; // Bouton pour 100 steps\3 mm
-const int button_1 = A0; // Bouton pour -1 Step
-const int button1 = A1; // Bouton pour +1 Step
+const int button0 = A1;   // Bouton pour 0 step\0 mm 
+const int button20 = A2;  // Bouton pour 20 steps\0.6 mm
+const int button100 = A3; // Bouton pour 100 steps\3 mm
+const int button_1 = A4; // Bouton pour -1 Step
+const int button1 = A5; // Bouton pour +1 Step
 
 const byte segmentDigits[12] =  {
   0b01011111, // 0
@@ -90,16 +90,14 @@ void displayNumber(float number) {
   }
 }
 
-void moveStepper(int _step, int newStep) {
-	if (_step>newStep){// Fait descendre le plateau
-  	digitalWrite(dirPin, -1);// Changement direction du moteur
-		myStepper.step(_step-newStep);
-	}
-	if (_step<newStep){// Fait monter le plateau
-  	digitalWrite(dirPin, 1);// Changement direction du moteur
-		myStepper.step(newStep-_step);
-	}
-	_step = newStep;
+void moveToStep(int target) {
+  stepper.moveTo(target);
+
+  while (stepper.distanceToGo() != 0) {
+    stepper.run();
+  }
+
+  stepPosition = target;
 }
 
 void setup() {
@@ -112,7 +110,8 @@ void setup() {
   }
 
   // Déclaration de la vitesse du moteur
-  myStepper.setSpeed(100); // Vitesse en tours par minute
+  stepper.setMaxSpeed(500);
+  stepper.setAcceleration(200);
 
   // Déclaration de la direction du moteur
   pinMode(dirPin, OUTPUT);
@@ -127,43 +126,47 @@ void setup() {
   Serial.begin(9600);
 }
 
-int step = 0;
 
 void loop() {
 
   if (digitalRead(button0) == LOW) {
-    moveStepper(step, 0);
+    Serial.print("0");
+    moveToStep(0);
     delay(200);
-    step = 0;
+    stepPosition = 0;
   }
   if (digitalRead(button20) == LOW) {
-    moveStepper(step, 20);
+    Serial.print("20");
+    moveToStep(20);
     delay(200); 
-    step = 20;
+    stepPosition = 20;
   }
   if (digitalRead(button100) == LOW) {
-    moveStepper(step, 100);
+    Serial.print("100");
+    moveToStep(100);
     delay(200);
-    step = 100;
+    stepPosition = 100;
   }
   if (digitalRead(button_1) == LOW) {// On fait descendre de 1 Step le plateau
-    if (step - 1>=0){
-      step = step - 1;
+    Serial.print("-");
+    if (stepPosition - 1>=0){
+      stepPosition = stepPosition - 1;
       digitalWrite(dirPin, -1);
-			myStepper.step(1);
+      moveToStep(stepPosition);
       delay(200);
     }
   }
   if (digitalRead(button1) == LOW) {// On fait monter de 1 Step le plateau
-    if (step + 1<=3){
-      step = step + 1;
+    Serial.print("+");
+    if (stepPosition + 1<=3){
+      stepPosition = stepPosition + 1;
       digitalWrite(dirPin, 1);
-			myStepper.step(1);
+      moveToStep(stepPosition);
       delay(200);
     }
   }
 
   // Calcul et affichage de l'élévation
-  float elevation = (step / 200.0) * 6.0;
+  float elevation = (stepPosition / 200.0) * 6.0;
   displayNumber(elevation);
 }
