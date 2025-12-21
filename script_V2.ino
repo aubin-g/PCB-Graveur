@@ -95,11 +95,11 @@ void moveStepper(int _step, int newStep) {
   	digitalWrite(dirPin, -1);// Changement direction du moteur
 		myStepper.step(_step-newStep);
 	}
-	if (_angle<newAngle){// Fait monter le plateau
+	if (_step<newStep){// Fait monter le plateau
   	digitalWrite(dirPin, 1);// Changement direction du moteur
 		myStepper.step(newStep-_step);
 	}
-	_step = newStep
+	_step = newStep;
 }
 
 void setup() {
@@ -155,7 +155,7 @@ void loop() {
     }
   }
   if (digitalRead(button1) == LOW) {// On fait monter de 1 Step le plateau
-    if (angle + 1<=3){
+    if (step + 1<=3){
       step = step + 1;
       digitalWrite(dirPin, 1);
 			myStepper.step(1);
