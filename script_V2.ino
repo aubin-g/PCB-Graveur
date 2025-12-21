@@ -15,7 +15,7 @@ const int stepsPerRevolution = 200;
 // Création de l'objet Stepper
 Stepper myStepper(stepsPerRevolution, stepPin, dirPin);
 
-const int digitPins[4] = {4, 3, 2, 5};  // Pins des cathodes des digits
+const int digitPins[4] = {5, 2, 3, 4};  // Pins des cathodes des digits
 
 // Définition des boutons
 const int button0 = 6;   // Bouton pour 0 step\0 mm 
