@@ -6,8 +6,9 @@ const int clockPin = 10;  // SH_CP
 // Stepper Moteur
 #include <AccelStepper.h>
 
-const int stepPin = 6;// Déclaration des broches de contrôle du moteur
-const int dirPin = 7;
+const int stepPin = 3;// Déclaration des broches de contrôle du moteur
+const int dirPin = 4;
+const int enablePin = 2;
 
 // Création de l'objet Stepper
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
@@ -15,7 +16,7 @@ AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
 int stepPosition = 0;
 
 
-const int digitPins[4] = {5, 2, 3, 4};  // Pins des cathodes des digits
+const int digitPins[4] = {8, 5, 6, 7};  // Pins des cathodes des digits
 
 // Définition des boutons
 const int button0 = A1;   // Bouton pour 0 step\0 mm 
@@ -91,12 +92,14 @@ void displayNumber(float number) {
 }
 
 void moveToStep(int target) {
+  digitalWrite(enablePin, LOW); // moteur ON
   stepper.moveTo(target);
 
   while (stepper.distanceToGo() != 0) {
     stepper.run();
   }
 
+  digitalWrite(enablePin, HIGH); // moteur OFF
   stepPosition = target;
 }
 
@@ -112,6 +115,9 @@ void setup() {
   // Déclaration de la vitesse du moteur
   stepper.setMaxSpeed(500);
   stepper.setAcceleration(200);
+
+  pinMode(enablePin, OUTPUT);
+  digitalWrite(enablePin, HIGH); // moteur OFF
 
   // Déclaration de la direction du moteur
   pinMode(dirPin, OUTPUT);
